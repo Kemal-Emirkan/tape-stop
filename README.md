@@ -82,17 +82,22 @@ Geplante Bedienung, sobald das Spiel spielbar ist:
 
 ## Projektstruktur
 
+Aktuell existieren `docs/`, `src/main.ts`, `index.html` und die Konfigurationsdateien. Die übrigen Ordner sind geplant und entstehen mit ihrem ersten Inhalt (Meilensteine M1 bis M5 laut Briefing). Die Struktur ist ein Plan und kann sich ändern.
+
 ```
 tape-stop/
-├── docs/              Briefing und Paper-Prototype
-├── src/               Quellcode (aktuell nur main.ts)
-├── index.html         Einstiegsseite
-├── CONTRIBUTING.md    Konventionen für Commits, Branches und Code
-├── CREDITS.md         Quellen und Lizenzen der Medien
-└── LICENSE            MIT-Lizenz
+├── docs/               Briefing, Paper-Prototype
+├── public/             Presets (lizenzfreie Songs und Videos), ab M5
+├── src/
+│   ├── config/         Konstanten und Tastenbelegung (ab M1)
+│   ├── game/           Game-Loop, Spieler, Hindernisse, Leben (ab M1)
+│   ├── audio/          Laden, Audio-Graph, Analyse, Level-Generator (ab M2)
+│   ├── ui/             Menüs, HUD, Settings (ab M5)
+│   ├── themes/         Base-Theme und weitere Themes (ab M5)
+│   └── main.ts         Einstiegspunkt
+├── README.md, CONTRIBUTING.md, CREDITS.md, LICENSE
+└── Konfigurationsdateien (package.json, tsconfig.json, vite.config.ts, eslint.config.js, ...)
 ```
-
-Geplant sind unter `src/` getrennte Module für Konfiguration, Audio, Analyse, Level-Generierung, Spiellogik, UI und Themes.
 
 ## Mitwirkende
 
