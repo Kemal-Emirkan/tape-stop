@@ -35,6 +35,25 @@ Das Spiel ist ein eigenständiges Rhythmusspiel. Visuelle Themes ändern nur die
 Warum kein Unity: Die Kursvorgabe verlangt Web-Audio-API und Canvas, und Unity-WebGL bietet im Browser nur sehr eingeschränktes Audio (kein Threading, nur Lautstärke im AudioMixer).
 Warum kein Phaser/Pixi: Das Spiel ist visuell einfach (feste Spielerposition, scrollende Hindernisse, Video-Draw). Ein eigenes, kleines Rendering ist leichter zu verstehen, zu bewerten und zu pflegen. Das kann bei Bedarf geändert werden.
 
+### Ordnerstruktur (Zielbild)
+
+Ordner entstehen mit ihrem ersten Inhalt, Git speichert keine leeren Ordner. Die Struktur ist ein Plan und darf sich ändern, vor der Abgabe wird sie noch einmal aufgeräumt.
+
+```
+tape-stop/
+├── docs/               Briefing, Paper-Prototype
+├── public/             Presets (lizenzfreie Songs und Videos), ab M5
+├── src/
+│   ├── config/         Konstanten und Tastenbelegung (ab M1)
+│   ├── game/           Game-Loop, Spieler, Hindernisse, Leben (ab M1)
+│   ├── audio/          Laden, Audio-Graph, Analyse, Level-Generator (ab M2)
+│   ├── ui/             Menüs, HUD, Settings (ab M5)
+│   ├── themes/         Base-Theme und weitere Themes (ab M5)
+│   └── main.ts         Einstiegspunkt
+├── README.md, CONTRIBUTING.md, CREDITS.md, LICENSE
+└── Konfigurationsdateien (package.json, tsconfig.json, vite.config.ts, eslint.config.js, ...)
+```
+
 ## 3. Gameplay
 
 ### Aufbau
@@ -251,13 +270,28 @@ feat: Added the new Audio Thing and also changed some UI and fixed lint
 
 ### 10.2 Branches und Pull Requests
 
-- `main` ist immer lauffähig. Gearbeitet wird auf **Branches**, Änderungen kommen per **Pull Request** nach `main`.
+Es gibt zwei dauerhafte Branches:
+
+- **`main`**: stabiler, getesteter Stand. Er ist immer lauffähig und wird bewertet.
+- **`dev`**: Integrationsbranch. Hier kommen alle fertigen Features zusammen und werden gemeinsam getestet.
+
+Beide sind per Regel geschützt: Änderungen nur per **Pull Request**, kein Force-Push, nicht löschbar.
+
+**Ablauf**
+
+1. Ein Feature-Branch startet immer von `dev` (`git switch dev`, `git pull`, `git switch -c feature/12-onset-detection`).
+2. Der **Pull Request geht nach `dev`** (im PR "base: dev" prüfen). Die andere Person schaut drüber, gemerged wird per **"Squash and merge"**, damit pro PR ein sauberer Commit auf `dev` steht.
+3. Auf `dev` wird getestet (`npm run dev`, `npm run build`).
+4. Läuft ein Stand (zum Beispiel ein Meilenstein), geht ein Pull Request **von `dev` nach `main`**. Hier wird per **"Create a merge commit"** gemerged (nicht Squash, sonst laufen die Branches auseinander). In die Beschreibung kommen `Closes #12, closes #13` für die enthaltenen Issues: GitHub schließt Issues nur beim Merge in den Standard-Branch `main`.
+5. Nach jedem Meilenstein wird auf `main` ein Tag gesetzt (zum Beispiel `v0.1`).
+
+**Regeln**
+
 - **Branch-Namen**: `feature/<kurzname>`, `fix/<kurzname>`, `docs/<kurzname>`, `refactor/<kurzname>`, klein geschrieben mit Bindestrichen, optional mit Issue-Nummer (`feature/12-onset-detection`).
 - Branches sind **kurzlebig** und werden nach dem Merge gelöscht.
 - **PR-Titel** folgt dem Commit-Schema (`feat(audio): add offline beat analysis`). Die Beschreibung nennt: was geändert wurde, warum, wie getestet, verknüpftes Issue.
 - **Review**: Die jeweils andere Person schaut kurz drüber, bevor gemerged wird.
-- Gemerged wird per **"Squash and merge"**, damit auf `main` pro PR ein sauberer Commit steht.
-- Arbeit wird als **GitHub Issues** geplant (ein Issue pro Aufgabe, zugeordnet zu einem Meilenstein aus Abschnitt 8) und auf einem Board (Todo, In Progress, Done) verfolgt.
+- Arbeit wird als **GitHub Issues** geplant (ein Issue pro Aufgabe, zugeordnet zu einem Meilenstein aus Abschnitt 8) und auf einem Board verfolgt (Todo, In Progress, Ready for review, Done).
 
 ### 10.3 Code-Style
 
