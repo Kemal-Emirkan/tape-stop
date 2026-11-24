@@ -1,3 +1,4 @@
+// TODO: Background Corridor 
 //import { Background } from './background.js';
 
 // TODO: Extract Keybindings in seperate input.ts?
@@ -15,7 +16,8 @@ export class Game{
     gameOver=false;
 
     constructor(private context: CanvasRenderingContext2D){
-       this.listenForInput();
+        //this.background=new Background(context, this.speed);
+        this.listenForInput();
     }
 
     listenForInput(){
@@ -34,9 +36,9 @@ export class Game{
     }
 
     draw(){
-        //this.background.draw();
         const { width, height } = this.context.canvas;
         this.context.clearRect(0, 0, width, height);
+        //this.background.draw();
 
         this.context.fillStyle='#2d3436'; this.context.font='24px Arial';
         this.context.fillText('Score: '+this.score,20,40);
