@@ -1,27 +1,50 @@
-// TODO: Display Floor and Ceiling Correctly
+import {
+  CANVAS_HEIGHT_PX,
+  CANVAS_WIDTH_PX,
+  CEILING_HEIGHT_PX,
+  CORRIDOR_BACKGROUND_COLOR,
+  CORRIDOR_STRIPE_COLOR,
+  CORRIDOR_WALL_COLOR,
+  FLOOR_HEIGHT_PX,
+  STRIPE_SPACING_PX,
+  STRIPE_WIDTH_PX,
+} from '../config/constants';
+
+const FLOOR_TOP_PX = CANVAS_HEIGHT_PX - FLOOR_HEIGHT_PX;
+
 export class Corridor {
-  groundOffset = 0;
+  private scrollOffsetPx = 0;
 
   constructor(
-    public context: CanvasRenderingContext2D,
+    private context: CanvasRenderingContext2D,
     public speed: number,
   ) {}
 
-  update() {
-    this.groundOffset -= this.speed;
+  update(): void {
+    this.scrollOffsetPx += this.speed;
   }
 
-  draw() {
-    //sky
-    const gradient = this.context.createLinearGradient(0, 0, 0, 450);
-    gradient.addColorStop(0, '#74ebd5');
-    gradient.addColorStop(1, '#ACB6E5');
-    this.context.fillStyle = gradient;
-    this.context.fillRect(0, 0, 0, 450);
+  render(): void {
+    const ctx = this.context;
 
-    //ground
-    this.context.fillStyle = '#7ec850';
-    this.context.fillRect(this.groundOffset % 900, 450 - 40, 900, 40);
-    this.context.fillRect((this.groundOffset % 900) + 900, 450 - 40, 900, 40);
+    ctx.fillStyle = CORRIDOR_BACKGROUND_COLOR;
+    ctx.fillRect(0, 0, CANVAS_WIDTH_PX, CANVAS_HEIGHT_PX);
+
+    ctx.fillStyle = CORRIDOR_WALL_COLOR;
+    ctx.fillRect(0, 0, CANVAS_WIDTH_PX, CEILING_HEIGHT_PX);
+    ctx.fillRect(0, FLOOR_TOP_PX, CANVAS_WIDTH_PX, FLOOR_HEIGHT_PX);
+
+    this.renderStripes();
+  }
+
+  private renderStripes(): void {
+    const ctx = this.context;
+    const firstStripeX = -(this.scrollOffsetPx % STRIPE_SPACING_PX);
+
+    ctx.fillStyle = CORRIDOR_STRIPE_COLOR;
+    for (let x = firstStripeX; x < CANVAS_WIDTH_PX; x += STRIPE_SPACING_PX) {
+      ctx.fillRect(x, 0, STRIPE_WIDTH_PX, CEILING_HEIGHT_PX);
+      ctx.fillRect(x, FLOOR_TOP_PX, STRIPE_WIDTH_PX, FLOOR_HEIGHT_PX);
+    }
   }
 }

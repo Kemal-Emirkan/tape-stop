@@ -24,3 +24,15 @@ export const SCROLL_SPEED_PX_PER_SEC = 300;
 
 /** Upper bound for one frame's delta time, avoids jumps after tab switches. */
 export const MAX_FRAME_DELTA_SEC = 0.1;
+
+/** Width of a single scrolling stripe on floor and ceiling. */
+export const STRIPE_WIDTH_PX = 20;
+
+/** Corridor background between floor and ceiling. */
+export const CORRIDOR_BACKGROUND_COLOR = '#1e1e2e';
+
+/** Fill color of floor and ceiling. */
+export const CORRIDOR_WALL_COLOR = '#45475a';
+
+/** Color of the scrolling stripes that make movement visible. */
+export const CORRIDOR_STRIPE_COLOR = '#585b70';

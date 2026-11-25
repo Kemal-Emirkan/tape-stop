@@ -36,7 +36,7 @@ export class Game {
   draw() {
     const { width, height } = this.context.canvas;
     this.context.clearRect(0, 0, width, height);
-    this.corridor.draw();
+    this.corridor.render();
 
     this.context.fillStyle = '#2d3436';
     this.context.font = '24px Arial';
