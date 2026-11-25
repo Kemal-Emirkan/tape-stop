@@ -6,6 +6,7 @@ import {
   CORRIDOR_STRIPE_COLOR,
   CORRIDOR_WALL_COLOR,
   FLOOR_HEIGHT_PX,
+  SCROLL_SPEED_PX_PER_SEC,
   STRIPE_SPACING_PX,
   STRIPE_WIDTH_PX,
 } from '../config/constants';
@@ -15,13 +16,10 @@ const FLOOR_TOP_PX = CANVAS_HEIGHT_PX - FLOOR_HEIGHT_PX;
 export class Corridor {
   private scrollOffsetPx = 0;
 
-  constructor(
-    private context: CanvasRenderingContext2D,
-    public speed: number,
-  ) {}
+  constructor(private context: CanvasRenderingContext2D) {}
 
-  update(): void {
-    this.scrollOffsetPx += this.speed;
+  update(deltaSec: number): void {
+    this.scrollOffsetPx += SCROLL_SPEED_PX_PER_SEC * deltaSec;
   }
 
   render(): void {

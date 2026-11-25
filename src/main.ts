@@ -1,5 +1,12 @@
-import { CANVAS_HEIGHT_PX, CANVAS_WIDTH_PX } from './config/constants';
+import {
+  CANVAS_HEIGHT_PX,
+  CANVAS_WIDTH_PX,
+  FIXED_STEP_SEC,
+  MAX_FRAME_TIME_SEC,
+} from './config/constants';
 import { Game } from './game/Game';
+
+const MS_PER_SEC = 1000;
 
 const canvas = document.getElementById('game');
 
@@ -17,11 +24,20 @@ if (context === null) {
 
 const game = new Game(context);
 
-// TODO: Use fixed timestep (accumulator) instead of raw requestAnimationFrame
-function gameLoop() {
-  game.update();
-  game.draw();
-  requestAnimationFrame(gameLoop);
+let lastTimeSec = performance.now() / MS_PER_SEC;
+let accumulatorSec = 0;
+
+function frame(nowMs: number): void {
+  const nowSec = nowMs / MS_PER_SEC;
+  accumulatorSec += Math.min(nowSec - lastTimeSec, MAX_FRAME_TIME_SEC);
+  lastTimeSec = nowSec;
+
+  while (accumulatorSec >= FIXED_STEP_SEC) {
+    game.update(FIXED_STEP_SEC);
+    accumulatorSec -= FIXED_STEP_SEC;
+  }
+  game.render();
+  requestAnimationFrame(frame);
 }
 
-gameLoop();
+requestAnimationFrame(frame);

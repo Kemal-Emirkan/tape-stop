@@ -1,6 +1,6 @@
 import { Corridor } from './Corridor';
 
-// TODO: Extract Keybindings in seperate input.ts?
+// TODO(#2): Move key bindings to src/config and match the briefing (F jump, D slide, G attack, ESC pause)
 const KEY_ACTIONS = new Map<string, () => void>([
   ['KeyD', () => console.log('jump')],
   ['KeyF', () => console.log('duck')],
@@ -8,42 +8,28 @@ const KEY_ACTIONS = new Map<string, () => void>([
 ]);
 
 export class Game {
-  corridor: Corridor;
-  score = 0;
-  speed = 4;
-  gameOver = false;
+  private corridor: Corridor;
 
   constructor(private context: CanvasRenderingContext2D) {
-    this.corridor = new Corridor(context, this.speed);
+    this.corridor = new Corridor(context);
     this.listenForInput();
   }
 
-  listenForInput() {
+  update(deltaSec: number): void {
+    this.corridor.update(deltaSec);
+  }
+
+  render(): void {
+    const { width, height } = this.context.canvas;
+    this.context.clearRect(0, 0, width, height);
+    this.corridor.render();
+  }
+
+  private listenForInput(): void {
     window.addEventListener('keydown', (e) => {
       if (e.repeat) return;
       const action = KEY_ACTIONS.get(e.code);
       if (action) action();
     });
-  }
-
-  update() {
-    if (this.gameOver) return;
-    this.corridor.update();
-    this.score++;
-    if (this.score % 5 === 0) this.speed += 0.5;
-  }
-
-  draw() {
-    const { width, height } = this.context.canvas;
-    this.context.clearRect(0, 0, width, height);
-    this.corridor.render();
-
-    this.context.fillStyle = '#2d3436';
-    this.context.font = '24px Arial';
-    this.context.fillText('Score: ' + this.score, 20, 40);
-    if (this.gameOver) {
-      this.context.fillStyle = 'red';
-      this.context.font = '40';
-    }
   }
 }

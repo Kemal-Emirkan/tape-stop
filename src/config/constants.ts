@@ -22,9 +22,6 @@ export const PLAYER_SIZE_PX = 40;
 /** Constant scroll speed until speed is derived from the song. */
 export const SCROLL_SPEED_PX_PER_SEC = 300;
 
-/** Upper bound for one frame's delta time, avoids jumps after tab switches. */
-export const MAX_FRAME_DELTA_SEC = 0.1;
-
 /** Width of a single scrolling stripe on floor and ceiling. */
 export const STRIPE_WIDTH_PX = 20;
 
@@ -36,3 +33,9 @@ export const CORRIDOR_WALL_COLOR = '#45475a';
 
 /** Color of the scrolling stripes that make movement visible. */
 export const CORRIDOR_STRIPE_COLOR = '#585b70';
+
+/** Duration of one fixed simulation step (60 updates per second). */
+export const FIXED_STEP_SEC = 1 / 60;
+
+/** Upper bound for elapsed time per frame, prevents a spiral of death after tab switches. */
+export const MAX_FRAME_TIME_SEC = 0.25;
