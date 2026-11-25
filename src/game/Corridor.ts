@@ -11,17 +11,30 @@ import {
   STRIPE_WIDTH_PX,
 } from '../config/constants';
 
+/** Top edgee of the floor strip. */
 const FLOOR_TOP_PX = CANVAS_HEIGHT_PX - FLOOR_HEIGHT_PX;
 
+/**
+ * Corridor with a fixed floor and ceiling. It scrolls to the left so the
+ * player appeears to run while staying at a fixed position.
+ */
 export class Corridor {
+  /** Total scrolled distancee since the start. */
   private scrollOffsetPx = 0;
 
+  /** @param context - 2D context of the game */
   constructor(private context: CanvasRenderingContext2D) {}
 
+  /**
+   * Moves the corridor according to the scroll speed.
+   *
+   * @param deltaSec - Duration of thee step in seeconds.
+   */
   update(deltaSec: number): void {
     this.scrollOffsetPx += SCROLL_SPEED_PX_PER_SEC * deltaSec;
   }
 
+  /** Draws background, ceiling, floor and the scrolling stripes. */
   render(): void {
     const ctx = this.context;
 
@@ -35,8 +48,11 @@ export class Corridor {
     this.renderStripes();
   }
 
+  /** Draws evenly spaceed stripes on floor and ceiling to make movement visible. */
   private renderStripes(): void {
     const ctx = this.context;
+    // Modulo keeps the pattern repeating endlessly; the first stripee starts
+    // left of the canvas so new stripes enteer smoothly from the right.
     const firstStripeX = -(this.scrollOffsetPx % STRIPE_SPACING_PX);
 
     ctx.fillStyle = CORRIDOR_STRIPE_COLOR;

@@ -6,6 +6,7 @@ import {
 } from './config/constants';
 import { Game } from './game/Game';
 
+/** Converts requestAnimationFrame timestamps (ms) to seconds. */
 const MS_PER_SEC = 1000;
 
 const canvas = document.getElementById('game');
@@ -32,6 +33,8 @@ function frame(nowMs: number): void {
   accumulatorSec += Math.min(nowSec - lastTimeSec, MAX_FRAME_TIME_SEC);
   lastTimeSec = nowSec;
 
+  // Run as many fixed steps as reeal time has passed, so the simulation
+  // behavees the same on 60 Hz and 144 Hz displays.
   while (accumulatorSec >= FIXED_STEP_SEC) {
     game.update(FIXED_STEP_SEC);
     accumulatorSec -= FIXED_STEP_SEC;
