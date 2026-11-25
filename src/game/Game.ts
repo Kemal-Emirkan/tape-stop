@@ -1,5 +1,4 @@
-// TODO: Background Corridor 
-//import { Background } from './background.js';
+import { Corridor } from './Corridor'
 
 // TODO: Extract Keybindings in seperate input.ts?
 const KEY_ACTIONS = new Map<string, () => void>([
@@ -10,13 +9,13 @@ const KEY_ACTIONS = new Map<string, () => void>([
 
 export class Game{
 
-    //background: Background; 
+    corridor: Corridor; 
     score=0;
     speed=4;
     gameOver=false;
 
     constructor(private context: CanvasRenderingContext2D){
-        //this.background=new Background(context, this.speed);
+        this.corridor=new Corridor(context, this.speed);
         this.listenForInput();
     }
 
@@ -30,7 +29,7 @@ export class Game{
 
     update(){
         if(this.gameOver) return;
-        //this.background.update();
+        this.corridor.update();
         this.score++;
         if(this.score%5===0) this.speed+=0.5;
     }
@@ -38,7 +37,7 @@ export class Game{
     draw(){
         const { width, height } = this.context.canvas;
         this.context.clearRect(0, 0, width, height);
-        //this.background.draw();
+        this.corridor.draw();
 
         this.context.fillStyle='#2d3436'; this.context.font='24px Arial';
         this.context.fillText('Score: '+this.score,20,40);
