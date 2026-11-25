@@ -39,3 +39,6 @@ export const FIXED_STEP_SEC = 1 / 60;
 
 /** Upper bound for elapsed time per frame, prevents a spiral of death after tab switches. */
 export const MAX_FRAME_TIME_SEC = 0.25;
+
+/** Fill color of the player cube. */
+export const PLAYER_COLOR = '#f38ba8';
