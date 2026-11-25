@@ -42,3 +42,9 @@ export const MAX_FRAME_TIME_SEC = 0.25;
 
 /** Fill color of the player cube. */
 export const PLAYER_COLOR = '#f38ba8';
+
+/** Downward acceleration while the player is in the air. */
+export const GRAVITY_PX_PER_SEC2 = 2400;
+
+/** Upward start speed of a jump. Peak height is v² / (2 * g) = 133 px. */
+export const JUMP_VELOCITY_PX_PER_SEC = 800;

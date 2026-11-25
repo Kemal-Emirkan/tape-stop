@@ -33,6 +33,7 @@ export class Game {
    */
   update(deltaSec: number): void {
     this.corridor.update(deltaSec);
+    this.player.update(deltaSec);
   }
 
   /** Draws the current game state; later objects are drawn on top. */
@@ -48,7 +49,16 @@ export class Game {
     window.addEventListener('keydown', (e) => {
       if (e.repeat) return;
       const action = ACTION_BY_KEY.get(e.code);
-      if (action) console.log(action);
+      if (!action) return;
+
+      switch (action) {
+        case 'jump':
+          this.player.jump();
+          break;
+        default:
+          // TODO(#2): Trigger slide and attack on the player
+          console.log(action);
+      }
     });
   }
 }
