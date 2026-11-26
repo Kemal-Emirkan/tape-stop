@@ -71,13 +71,16 @@ export const ATTACK_COLOR = '#f9e2af';
 export const OBSTACLE_WIDTH_PX = 40;
 
 /** Height of floor obstacles; well below the jump peak of ~133 px. */
-export const FLOOR_OBSTACLE_HEIGHT_PX = 50;
+export const FLOOR_OBSTACLE_HEIGHT_PX = 40;
 
 /** Free space between a ceiling obstacle and the floor; fits a sliding but not a standing cube. */
 export const CEILING_OBSTACLE_GAP_PX = 30;
 
-/** Edge length of the square mid-height target. */
-export const MIDDLE_OBSTACLE_SIZE_PX = 40;
+/** Height of the mid target; reaches above the jump peak so it cannot be jumped over. */
+export const MIDDLE_OBSTACLE_HEIGHT_PX = 180;
+
+/** Free space below the mid target; smaller than the slide height so sliding under it fails. */
+export const MIDDLE_OBSTACLE_GAP_PX = 10;
 
 /** Fill color of obstacles on the floor (jump). */
 export const FLOOR_OBSTACLE_COLOR = '#89b4fa';

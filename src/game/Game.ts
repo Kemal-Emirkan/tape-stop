@@ -1,5 +1,7 @@
 import { KEY_BINDINGS, type PlayerAction } from '../config/keyBindings';
+import { TEST_LEVEL } from '../config/testLevel';
 import { Corridor } from './Corridor';
+import { Obstacle } from './Obstacle';
 import { Player } from './Player';
 
 /** Reverse lookup of KEY_BINDINGS: key code -> action. */
@@ -15,6 +17,10 @@ export class Game {
   private corridor: Corridor;
   private player: Player;
   private isPaused: boolean;
+  private obstacles: Obstacle[];
+
+  /** Game time; only advances while not paused. */
+  private elapsedSec = 0;
 
   /**
    * Creates all game objects and starts listening for keyboard input.
@@ -28,6 +34,7 @@ export class Game {
   ) {
     this.corridor = new Corridor(context);
     this.player = new Player(context);
+    this.obstacles = TEST_LEVEL.map((spawn) => new Obstacle(spawn.type, spawn.timeSec, context));
     this.isPaused = false;
     this.listenForInput();
   }
@@ -55,6 +62,7 @@ export class Game {
    */
   update(deltaSec: number): void {
     if (this.isPaused) return;
+    this.elapsedSec += deltaSec;
     this.corridor.update(deltaSec);
     this.player.update(deltaSec);
   }
@@ -64,6 +72,9 @@ export class Game {
     const { width, height } = this.context.canvas;
     this.context.clearRect(0, 0, width, height);
     this.corridor.render();
+    for (const obstacle of this.obstacles) {
+      if (!obstacle.isDestroyed) obstacle.render(this.elapsedSec);
+    }
     this.player.render();
   }
 
