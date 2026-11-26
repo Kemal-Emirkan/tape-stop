@@ -66,3 +66,27 @@ export const ATTACK_HEIGHT_PX = 16;
 
 /** Fill color of the attack area. */
 export const ATTACK_COLOR = '#f9e2af';
+
+/** Width of every obstacle, same as the player. */
+export const OBSTACLE_WIDTH_PX = 40;
+
+/** Height of floor obstacles; well below the jump peak of ~133 px. */
+export const FLOOR_OBSTACLE_HEIGHT_PX = 50;
+
+/** Free space between a ceiling obstacle and the floor; fits a sliding but not a standing cube. */
+export const CEILING_OBSTACLE_GAP_PX = 30;
+
+/** Edge length of the square mid-height target. */
+export const MIDDLE_OBSTACLE_SIZE_PX = 40;
+
+/** Fill color of obstacles on the floor (jump). */
+export const FLOOR_OBSTACLE_COLOR = '#89b4fa';
+
+/** Fill color of obstacles hanging from the ceiling (slide). */
+export const CEILING_OBSTACLE_COLOR = '#a6e3a1';
+
+/** Fill color of destructible targets at mid height (attack). */
+export const MIDDLE_OBSTACLE_COLOR = '#cba6f7';
+
+/** Fill color of an obstacle after it hit the player. */
+export const OBSTACLE_HIT_COLOR = '#d20f39';
