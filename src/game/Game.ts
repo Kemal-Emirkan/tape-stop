@@ -1,6 +1,7 @@
 import { CANVAS_WIDTH_PX, OBSTACLE_WIDTH_PX, SCROLL_SPEED_PX_PER_SEC } from '../config/constants';
 import { KEY_BINDINGS, type PlayerAction } from '../config/keyBindings';
 import { TEST_LEVEL, TEST_LEVEL_DURATION_SEC } from '../config/testLevel';
+import { rectsOverlap } from './collision';
 import { Corridor } from './Corridor';
 import { Obstacle } from './Obstacle';
 import { Player } from './Player';
@@ -90,6 +91,31 @@ export class Game {
 
     this.corridor.update(deltaSec);
     this.player.update(deltaSec);
+    this.checkCollisions();
+  }
+
+  /**
+   * Destroys mid targets hit by the attack, then marks obstacles that touch the player.
+   * The attack is checked first so that a hit in the same step goes in the player's favor.
+   */
+  private checkCollisions(): void {
+    const body = this.player.getHitbox();
+    const attack = this.player.getAttackBox();
+
+    for (const obstacle of this.obstacles) {
+      if (obstacle.isDestroyed || obstacle.hasHit) continue;
+      const rect = obstacle.getRect(this.elapsedSec);
+
+      if (attack && obstacle.type === 'middle' && rectsOverlap(attack, rect)) {
+        obstacle.isDestroyed = true;
+        continue;
+      }
+
+      if (rectsOverlap(body, rect)) {
+        // TODO(#?): cost a life and trigger the audio degradation (milestone 4).
+        obstacle.hasHit = true;
+      }
+    }
   }
 
   /** Draws the current game state; later objects are drawn on top. */
