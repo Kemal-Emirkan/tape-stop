@@ -55,8 +55,11 @@ export class Game {
         case 'jump':
           this.player.jump();
           break;
+        case 'slide':
+          this.player.slide();
+          break;
         default:
-          // TODO(#2): Trigger slide and attack on the player
+          // TODO(#2): Trigger attack on the player
           console.log(action);
       }
     });

@@ -6,6 +6,8 @@ import {
   PLAYER_COLOR,
   PLAYER_SIZE_PX,
   PLAYER_X_PX,
+  SLIDE_DURATION_SEC,
+  SLIDE_HEIGHT_PX,
 } from '../config/constants';
 
 /** Top edge of the player while standing on the floor. */
@@ -19,8 +21,11 @@ export class Player {
   /** Top edge of the cube; canvas y grows downwards. */
   private yPx = PLAYER_GROUND_Y_PX;
 
-  /** Veertical speed; negative means on the floor. */
+  /** Vertical speed; negative means moving up. */
   private velocityYPxPerSec = 0;
+
+  /** Remaining slide time; 0 means not sliding. */
+  private slideTimeLeftSec = 0;
 
   constructor(private context: CanvasRenderingContext2D) {}
 
@@ -32,16 +37,29 @@ export class Player {
   /** Starts a jump; ignored while already in the air (no double jump). */
   jump(): void {
     if (!this.isOnGround) return;
+    this.slideTimeLeftSec = 0;
     this.velocityYPxPerSec = -JUMP_VELOCITY_PX_PER_SEC;
+  }
+
+  /** Whether the cube is currently flattened */
+  private get isSliding(): boolean {
+    return this.slideTimeLeftSec > 0;
+  }
+
+  /** Starts a slide; only possible on the floor. */
+  slide(): void {
+    if (!this.isOnGround) return;
+    this.slideTimeLeftSec = SLIDE_DURATION_SEC;
   }
 
   /**
    * Applies gravity and moves the cube vertically.
    *
    * @param deltaSec - Duration of the step in seconds.
-   * @returns
    */
   update(deltaSec: number): void {
+    this.slideTimeLeftSec = Math.max(0, this.slideTimeLeftSec - deltaSec);
+
     if (this.isOnGround && this.velocityYPxPerSec >= 0) return;
 
     this.velocityYPxPerSec += GRAVITY_PX_PER_SEC2 * deltaSec;
@@ -56,7 +74,9 @@ export class Player {
 
   /** Draws the player at its current height. */
   render(): void {
+    const heightPx = this.isSliding ? SLIDE_HEIGHT_PX : PLAYER_SIZE_PX;
+    const topPx = this.yPx + PLAYER_SIZE_PX - heightPx;
     this.context.fillStyle = PLAYER_COLOR;
-    this.context.fillRect(PLAYER_X_PX, this.yPx, PLAYER_SIZE_PX, PLAYER_SIZE_PX);
+    this.context.fillRect(PLAYER_X_PX, topPx, PLAYER_SIZE_PX, heightPx);
   }
 }
