@@ -58,9 +58,14 @@ export class Game {
         case 'slide':
           this.player.slide();
           break;
-        default:
-          // TODO(#2): Trigger attack on the player
-          console.log(action);
+        case 'attack':
+          this.player.attack();
+          break;
+        default: {
+          // Fails to compile if a new PlayerAction has no case above.
+          const unhandled: never = action;
+          throw new Error(`Unhandled player action: ${unhandled}`);
+        }
       }
     });
   }

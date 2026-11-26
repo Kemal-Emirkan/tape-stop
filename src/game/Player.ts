@@ -1,4 +1,8 @@
 import {
+  ATTACK_COLOR,
+  ATTACK_DURATION_SEC,
+  ATTACK_HEIGHT_PX,
+  ATTACK_RANGE_PX,
   CANVAS_HEIGHT_PX,
   FLOOR_HEIGHT_PX,
   GRAVITY_PX_PER_SEC2,
@@ -27,6 +31,9 @@ export class Player {
   /** Remaining slide time; 0 means not sliding. */
   private slideTimeLeftSec = 0;
 
+  /** Remaining attack time; 0 means not attacking. */
+  private attackTimeLeftSec = 0;
+
   constructor(private context: CanvasRenderingContext2D) {}
 
   /** Whether the cube currently stands on the floor. */
@@ -52,6 +59,16 @@ export class Player {
     this.slideTimeLeftSec = SLIDE_DURATION_SEC;
   }
 
+  /** Whether the attack is currently active. */
+  private get isAttacking(): boolean {
+    return this.attackTimeLeftSec > 0;
+  }
+
+  /** Starts an attack; works on the floor and in the air. */
+  attack(): void {
+    this.attackTimeLeftSec = ATTACK_DURATION_SEC;
+  }
+
   /**
    * Applies gravity and moves the cube vertically.
    *
@@ -59,6 +76,7 @@ export class Player {
    */
   update(deltaSec: number): void {
     this.slideTimeLeftSec = Math.max(0, this.slideTimeLeftSec - deltaSec);
+    this.attackTimeLeftSec = Math.max(0, this.attackTimeLeftSec - deltaSec);
 
     if (this.isOnGround && this.velocityYPxPerSec >= 0) return;
 
@@ -72,11 +90,22 @@ export class Player {
     }
   }
 
-  /** Draws the player at its current height. */
+  /** Draws the player at its current height, plus the attack if active. */
   render(): void {
     const heightPx = this.isSliding ? SLIDE_HEIGHT_PX : PLAYER_SIZE_PX;
     const topPx = this.yPx + PLAYER_SIZE_PX - heightPx;
     this.context.fillStyle = PLAYER_COLOR;
     this.context.fillRect(PLAYER_X_PX, topPx, PLAYER_SIZE_PX, heightPx);
+
+    if (this.isAttacking) {
+      const centerYPx = topPx + heightPx / 2;
+      this.context.fillStyle = ATTACK_COLOR;
+      this.context.fillRect(
+        PLAYER_X_PX + PLAYER_SIZE_PX,
+        centerYPx - ATTACK_HEIGHT_PX / 2,
+        ATTACK_RANGE_PX,
+        ATTACK_HEIGHT_PX,
+      );
+    }
   }
 }
