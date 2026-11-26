@@ -6,9 +6,11 @@ import {
   CANVAS_HEIGHT_PX,
   FLOOR_HEIGHT_PX,
   GRAVITY_PX_PER_SEC2,
+  JUMP_HEIGHT_PX,
   JUMP_VELOCITY_PX_PER_SEC,
   PLAYER_COLOR,
   PLAYER_SIZE_PX,
+  PLAYER_X_PX,
   SLIDE_DURATION_SEC,
   SLIDE_HEIGHT_PX,
 } from '../config/constants';
@@ -90,14 +92,18 @@ export class Player {
     }
   }
   /**
-   * Body of the cube; inly half as high while sliding.
+   * Body of the cube; flattened while sliding, tucked while in the air.
    *
    * @returns Rectangle in canvas pixels.
    */
   getHitbox(): Rect {
+    if (!this.isOnGround) {
+      // Tucked: the top edge stays, the bottom pulls up towards the middle.
+      return { xPx: PLAYER_X_PX, yPx: this.yPx, widthPx: PLAYER_SIZE_PX, heightPx: JUMP_HEIGHT_PX };
+    }
     const heightPx = this.isSliding ? SLIDE_HEIGHT_PX : PLAYER_SIZE_PX;
     return {
-      xPx: PLAYER_SIZE_PX,
+      xPx: PLAYER_X_PX,
       // Sliding shrinks the cube from the top, so it stays on the floor.
       yPx: this.yPx + PLAYER_SIZE_PX - heightPx,
       widthPx: PLAYER_SIZE_PX,

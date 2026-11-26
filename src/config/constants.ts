@@ -93,3 +93,6 @@ export const MIDDLE_OBSTACLE_COLOR = '#cba6f7';
 
 /** Fill color of an obstacle after it hit the player. */
 export const OBSTACLE_HIT_COLOR = '#d20f39';
+
+/** Height of the tucked cube while in the air; shrinks from the bottom. */
+export const JUMP_HEIGHT_PX = 20;
