@@ -35,3 +35,6 @@ export const TEST_LEVEL: readonly ObstacleSpawn[] = [
   { type: 'ceiling', timeSec: 23.5 },
   { type: 'middle', timeSec: 24.5 },
 ];
+
+/** Length of one pass through TEST_LEVEL; the level repeats after this. */
+export const TEST_LEVEL_DURATION_SEC = 25;
