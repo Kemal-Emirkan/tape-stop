@@ -17,20 +17,34 @@ export class Game {
   private isPaused: boolean;
 
   /**
-   * Creates all gamee objeects and starts listening for keyboard input.
+   * Creates all game objects and starts listening for keyboard input.
    *
-   * @param context - 2D context of thee game canvas.
+   * @param context - 2D context of the game canvas.
+   * @param onPauseChange - Called whenever the game is paused or resumed.
    */
-  constructor(private context: CanvasRenderingContext2D) {
+  constructor(
+    private context: CanvasRenderingContext2D,
+    private onPauseChange: (isPaused: boolean) => void,
+  ) {
     this.corridor = new Corridor(context);
     this.player = new Player(context);
     this.isPaused = false;
     this.listenForInput();
   }
 
+  /**
+   * Pauses or resumes the game and notifies the listener.
+   *
+   * @param isPaused - True to pause, false to resume.
+   */
+  setPaused(isPaused: boolean): void {
+    this.isPaused = isPaused;
+    this.onPauseChange(isPaused);
+  }
+
   /** Toggles between paused and running. */
   private togglePause(): void {
-    this.isPaused = !this.isPaused;
+    this.setPaused(!this.isPaused);
   }
 
   /**
