@@ -1,5 +1,5 @@
 /** Actions the player can trigger with the keyboard. */
-export type PlayerAction = 'jump' | 'slide' | 'attack';
+export type PlayerAction = 'jump' | 'slide' | 'attack' | 'pause';
 
 /**
  * Keyboard bindings per player action, as KeyboardEvent.code values.
@@ -10,4 +10,5 @@ export const KEY_BINDINGS: Readonly<Record<PlayerAction, string>> = {
   jump: 'KeyF',
   slide: 'KeyD',
   attack: 'KeyG',
+  pause: 'Escape',
 };

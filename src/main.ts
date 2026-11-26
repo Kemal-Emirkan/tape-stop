@@ -5,6 +5,7 @@ import {
   MAX_FRAME_TIME_SEC,
 } from './config/constants';
 import { Game } from './game/Game';
+import { PauseMenu } from './ui/PauseMenu';
 
 /** Converts requestAnimationFrame timestamps (ms) to seconds. */
 const MS_PER_SEC = 1000;
@@ -23,7 +24,8 @@ if (context === null) {
   throw new Error('Canvas 2D context is not available');
 }
 
-const game = new Game(context);
+const pauseMenu = new PauseMenu(() => game.setPaused(false));
+const game = new Game(context, (isPaused) => (isPaused ? pauseMenu.show() : pauseMenu.hide()));
 
 let lastTimeSec = performance.now() / MS_PER_SEC;
 let accumulatorSec = 0;

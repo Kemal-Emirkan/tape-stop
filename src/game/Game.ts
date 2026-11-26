@@ -14,24 +14,47 @@ const ACTION_BY_KEY = new Map<string, PlayerAction>(
 export class Game {
   private corridor: Corridor;
   private player: Player;
+  private isPaused: boolean;
 
   /**
-   * Creates all gamee objeects and starts listening for keyboard input.
+   * Creates all game objects and starts listening for keyboard input.
    *
-   * @param context - 2D context of thee game canvas.
+   * @param context - 2D context of the game canvas.
+   * @param onPauseChange - Called whenever the game is paused or resumed.
    */
-  constructor(private context: CanvasRenderingContext2D) {
+  constructor(
+    private context: CanvasRenderingContext2D,
+    private onPauseChange: (isPaused: boolean) => void,
+  ) {
     this.corridor = new Corridor(context);
     this.player = new Player(context);
+    this.isPaused = false;
     this.listenForInput();
   }
 
   /**
-   * Advances the game state by one fixed simulation step.
+   * Pauses or resumes the game and notifies the listener.
+   *
+   * @param isPaused - True to pause, false to resume.
+   */
+  setPaused(isPaused: boolean): void {
+    this.isPaused = isPaused;
+    this.onPauseChange(isPaused);
+  }
+
+  /** Toggles between paused and running. */
+  private togglePause(): void {
+    this.setPaused(!this.isPaused);
+  }
+
+  /**
+   * Advances the game state by one fixed simulation step
+   * Does nothing while the game is paused.
    *
    * @param deltaSec - Duration of the step in seeconds.
    */
   update(deltaSec: number): void {
+    if (this.isPaused) return;
     this.corridor.update(deltaSec);
     this.player.update(deltaSec);
   }
@@ -50,6 +73,7 @@ export class Game {
       if (e.repeat) return;
       const action = ACTION_BY_KEY.get(e.code);
       if (!action) return;
+      if (this.isPaused && action !== 'pause') return;
 
       switch (action) {
         case 'jump':
@@ -60,6 +84,9 @@ export class Game {
           break;
         case 'attack':
           this.player.attack();
+          break;
+        case 'pause':
+          this.togglePause();
           break;
         default: {
           // Fails to compile if a new PlayerAction has no case above.
