@@ -42,3 +42,27 @@ export const MAX_FRAME_TIME_SEC = 0.25;
 
 /** Fill color of the player cube. */
 export const PLAYER_COLOR = '#f38ba8';
+
+/** Downward acceleration while the player is in the air. */
+export const GRAVITY_PX_PER_SEC2 = 2400;
+
+/** Upward start speed of a jump. Peak height is v² / (2 * g) = 133 px. */
+export const JUMP_VELOCITY_PX_PER_SEC = 800;
+
+/** How long a slide lasts after pressing the key once. */
+export const SLIDE_DURATION_SEC = 0.5;
+
+/** Height of the flattened cube while sliding. */
+export const SLIDE_HEIGHT_PX = 20;
+
+/** How long the attack stays visible after pressing the key once. */
+export const ATTACK_DURATION_SEC = 0.2;
+
+/** Reach of the attack in front of the cube. */
+export const ATTACK_RANGE_PX = 40;
+
+/** Height of the attack area, centered on the cube. */
+export const ATTACK_HEIGHT_PX = 16;
+
+/** Fill color of the attack area. */
+export const ATTACK_COLOR = '#f9e2af';

@@ -1,12 +1,11 @@
+import { KEY_BINDINGS, type PlayerAction } from '../config/keyBindings';
 import { Corridor } from './Corridor';
 import { Player } from './Player';
 
-// TODO(#2): Move key bindings to src/config and match the briefing (F jump, D slide, G attack, ESC pause)
-const KEY_ACTIONS = new Map<string, () => void>([
-  ['KeyD', () => console.log('jump')],
-  ['KeyF', () => console.log('duck')],
-  ['KeyG', () => console.log('dash')],
-]);
+/** Reverse lookup of KEY_BINDINGS: key code -> action. */
+const ACTION_BY_KEY = new Map<string, PlayerAction>(
+  Object.entries(KEY_BINDINGS).map(([action, code]) => [code, action as PlayerAction]),
+);
 
 /**
  * Central game object: owns all game objects, handles input and
@@ -34,6 +33,7 @@ export class Game {
    */
   update(deltaSec: number): void {
     this.corridor.update(deltaSec);
+    this.player.update(deltaSec);
   }
 
   /** Draws the current game state; later objects are drawn on top. */
@@ -48,8 +48,25 @@ export class Game {
   private listenForInput(): void {
     window.addEventListener('keydown', (e) => {
       if (e.repeat) return;
-      const action = KEY_ACTIONS.get(e.code);
-      if (action) action();
+      const action = ACTION_BY_KEY.get(e.code);
+      if (!action) return;
+
+      switch (action) {
+        case 'jump':
+          this.player.jump();
+          break;
+        case 'slide':
+          this.player.slide();
+          break;
+        case 'attack':
+          this.player.attack();
+          break;
+        default: {
+          // Fails to compile if a new PlayerAction has no case above.
+          const unhandled: never = action;
+          throw new Error(`Unhandled player action: ${unhandled}`);
+        }
+      }
     });
   }
 }
