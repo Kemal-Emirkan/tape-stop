@@ -6,6 +6,7 @@ import {
   CANVAS_HEIGHT_PX,
   FLOOR_HEIGHT_PX,
   GRAVITY_PX_PER_SEC2,
+  JUMP_HEIGHT_PX,
   JUMP_VELOCITY_PX_PER_SEC,
   PLAYER_COLOR,
   PLAYER_SIZE_PX,
@@ -13,6 +14,7 @@ import {
   SLIDE_DURATION_SEC,
   SLIDE_HEIGHT_PX,
 } from '../config/constants';
+import type { Rect } from './collision';
 
 /** Top edge of the player while standing on the floor. */
 const PLAYER_GROUND_Y_PX = CANVAS_HEIGHT_PX - FLOOR_HEIGHT_PX - PLAYER_SIZE_PX;
@@ -89,23 +91,53 @@ export class Player {
       this.velocityYPxPerSec = 0;
     }
   }
+  /**
+   * Body of the cube; flattened while sliding, tucked while in the air.
+   *
+   * @returns Rectangle in canvas pixels.
+   */
+  getHitbox(): Rect {
+    if (!this.isOnGround) {
+      // Tucked: the top edge stays, the bottom pulls up towards the middle.
+      return { xPx: PLAYER_X_PX, yPx: this.yPx, widthPx: PLAYER_SIZE_PX, heightPx: JUMP_HEIGHT_PX };
+    }
+    const heightPx = this.isSliding ? SLIDE_HEIGHT_PX : PLAYER_SIZE_PX;
+    return {
+      xPx: PLAYER_X_PX,
+      // Sliding shrinks the cube from the top, so it stays on the floor.
+      yPx: this.yPx + PLAYER_SIZE_PX - heightPx,
+      widthPx: PLAYER_SIZE_PX,
+      heightPx,
+    };
+  }
+
+  /**
+   * Area in front of the cube that destroys mid targets.
+   *
+   * @returns Rectangle in canvas pixels, or null while not attacking.
+   */
+  getAttackBox(): Rect | null {
+    if (!this.isAttacking) return null;
+    const body = this.getHitbox();
+    const centerYPx = body.yPx + body.heightPx / 2;
+    return {
+      xPx: body.xPx + body.widthPx,
+      yPx: centerYPx - ATTACK_HEIGHT_PX / 2,
+      widthPx: ATTACK_RANGE_PX,
+      heightPx: ATTACK_HEIGHT_PX,
+    };
+  }
 
   /** Draws the player at its current height, plus the attack if active. */
   render(): void {
-    const heightPx = this.isSliding ? SLIDE_HEIGHT_PX : PLAYER_SIZE_PX;
-    const topPx = this.yPx + PLAYER_SIZE_PX - heightPx;
+    const body = this.getHitbox();
     this.context.fillStyle = PLAYER_COLOR;
-    this.context.fillRect(PLAYER_X_PX, topPx, PLAYER_SIZE_PX, heightPx);
+    this.context.fillRect(body.xPx, body.yPx, body.widthPx, body.heightPx);
 
-    if (this.isAttacking) {
-      const centerYPx = topPx + heightPx / 2;
+    const attack = this.getAttackBox();
+    if (attack) {
       this.context.fillStyle = ATTACK_COLOR;
-      this.context.fillRect(
-        PLAYER_X_PX + PLAYER_SIZE_PX,
-        centerYPx - ATTACK_HEIGHT_PX / 2,
-        ATTACK_RANGE_PX,
-        ATTACK_HEIGHT_PX,
-      );
+      this.context.fillRect(attack.xPx, attack.yPx, attack.widthPx, attack.heightPx);
     }
   }
 }
